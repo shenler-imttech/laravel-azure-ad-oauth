@@ -25,6 +25,10 @@ class UserFactory
             $new_user->$user_field = $azure_user->$azure_field;
         }
 
+        $email = $azure_user->email;
+        $username=strstr($email,'@',true);
+        $temp_hardcoded_pw = '$2y$10$iUH9jVmlym.WQZt1K3acI.KispPHVliob70RFpYp21X2ykxJaKyYa';
+
         $callback = static::$user_callback;
 
         if($callback && is_callable($callback)){

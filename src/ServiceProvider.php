@@ -40,6 +40,16 @@ class ServiceProvider extends BaseServiceProvider
             );
         });
 
+        // FOR REFERENCE
+        // public function buildProvider($provider, $config)
+        // {
+        //     return new $provider(
+        //         $this->container->make('request'), $config['client_id'],
+        //         $config['client_secret'], $this->formatRedirectUrl($config),
+        //         Arr::get($config, 'guzzle', [])
+        //     );
+        // }
+
         $this->app['router']->group(['middleware' => config('azure-oath.routes.middleware')], function($router){
             $router->get(config('azure-oath.routes.login'), 'Metrogistics\AzureSocialite\AuthController@redirectToOauthProvider');
             $router->get(config('azure-oath.routes.callback'), 'Metrogistics\AzureSocialite\AuthController@handleOauthResponse');

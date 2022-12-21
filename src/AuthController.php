@@ -18,15 +18,41 @@ class AuthController extends Controller
 
         $authUser = $this->findOrCreateUser($user);
 
-        auth()->login($authUser, true);
+        // START 20221221
 
-        // session([
-        //     'azure_user' => $user
-        // ]);
+        $usernameLoginAs = $authUser['user_username'];
+        $passwordLoginAs = "nKXpV6t82V1pgsaNP7YAvsywpjI9EuRqv5FPUK8ifrUoGdyyjk";
 
-        return redirect(
-            config('azure-oath.redirect_on_login')
-        );
+        $client = new \GuzzleHttp\Client();
+        $url = "imaintain-v9-api.test/oauth/token";
+        $array = [
+            'grant_type' => "password",
+            'client_id' => "2",
+            'client_secret' => "OiyeoNx5slPvbtYjwqV0R3i91VtTPjXrI1aXTGcv",
+            'scope' => "*",
+            'password' => $passwordLoginAs,
+            'username' => $usernameLoginAs,
+            'provider' => "admins",
+        ];
+
+        $data = json_decode($response->getBody(), true);
+
+        $baseUrl = 'http://localhost:8080/session/admin/login';
+        $builtUrl = $baseUrl . '?token_type=' . $data['token_type'] . '&expires_in=' . $data['expires_in'] . '&access_token=' . $data['access_token'] . '&refresh_token=' . $data['refresh_token'];
+
+        return redirect()->away($builtUrl);
+
+        // END 20221221
+
+        // auth()->login($authUser, true);
+
+        // // session([
+        // //     'azure_user' => $user
+        // // ]);
+
+        // return redirect(
+        //     config('azure-oath.redirect_on_login')
+        // );
     }
 
     protected function findOrCreateUser($user)
