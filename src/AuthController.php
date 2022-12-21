@@ -34,6 +34,7 @@ class AuthController extends Controller
             'username' => $usernameLoginAs,
             'provider' => "admins",
         ];
+        $response = $client->request('POST', $url,  ['json'=>$array]);
 
         $data = json_decode($response->getBody(), true);
 
