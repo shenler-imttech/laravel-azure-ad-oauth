@@ -17,7 +17,8 @@ return [
     'credentials' => [
         'client_id' => env('AZURE_AD_CLIENT_ID', ''),
         'client_secret' => env('AZURE_AD_CLIENT_SECRET', ''),
-        'redirect' => Request::root().'/login/microsoft/callback'
+        // 'redirect' => Request::root().'/login/microsoft/callback'
+        'redirect' => env('APP_URL').'/service/login/microsoft/callback'
     ],
 
     // The route to redirect the user to upon login.
