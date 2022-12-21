@@ -29,6 +29,10 @@ class UserFactory
         $username=strstr($email,'@',true);
         $temp_hardcoded_pw = '$2y$10$iUH9jVmlym.WQZt1K3acI.KispPHVliob70RFpYp21X2ykxJaKyYa';
 
+        $new_user->user_username = $username;
+        $new_user->user_password = $temp_hardcoded_pw;
+        $new_user->user_status = 1;
+
         $callback = static::$user_callback;
 
         if($callback && is_callable($callback)){

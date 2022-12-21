@@ -63,14 +63,14 @@ class AzureOauthProvider extends AbstractProvider implements ProviderInterface
 
     protected function mapUserToObject(array $user)
     {
-        $email = $user['mail'];
-        $username=strstr($email,'@',true);
+        // $email = $user['mail'];
+        // $username=strstr($email,'@',true);
 
         return (new User())->setRaw($user)->map([
             'id'                => $user['id'],
             'name'              => $user['displayName'],
             'email'             => $user['mail'],
-            'username'          => $username,
+            // 'username'          => $username,
 
             'businessPhones'    => $user['businessPhones'],
             'displayName'       => $user['displayName'],
