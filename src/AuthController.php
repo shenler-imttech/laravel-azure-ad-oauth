@@ -24,7 +24,7 @@ class AuthController extends Controller
         $passwordLoginAs = "nKXpV6t82V1pgsaNP7YAvsywpjI9EuRqv5FPUK8ifrUoGdyyjk";
 
         $client = new \GuzzleHttp\Client();
-        $url = "imaintain-v9-api.test/oauth/token";
+        $url = env('APP_URL') ."/oauth/token";
         $array = [
             'grant_type' => "password",
             'client_id' => "2",
@@ -38,7 +38,7 @@ class AuthController extends Controller
 
         $data = json_decode($response->getBody(), true);
 
-        $baseUrl = 'http://localhost:8080/session/admin/login';
+        $baseUrl = env('APP_WEB_URL') . '/session/admin/login';
         $builtUrl = $baseUrl . '?token_type=' . $data['token_type'] . '&expires_in=' . $data['expires_in'] . '&access_token=' . $data['access_token'] . '&refresh_token=' . $data['refresh_token'];
 
         return redirect()->away($builtUrl);
