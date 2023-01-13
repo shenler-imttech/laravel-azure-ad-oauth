@@ -21,7 +21,8 @@ class AuthController extends Controller
         // START 20221221
 
         $usernameLoginAs = $authUser['user_username'];
-        $passwordLoginAs = "nKXpV6t82V1pgsaNP7YAvsywpjI9EuRqv5FPUK8ifrUoGdyyjk";
+//         $passwordLoginAs = "nKXpV6t82V1pgsaNP7YAvsywpjI9EuRqv5FPUK8ifrUoGdyyjk";
+        $passwordLoginAs = "12345678";
 
         $client = new \GuzzleHttp\Client();
         $url = env('APP_URL') ."/service/oauth/token";
