@@ -27,7 +27,8 @@ class UserFactory
 
         $email = $azure_user->email;
         $username=strstr($email,'@',true);
-        $temp_hardcoded_pw = '$2y$10$iUH9jVmlym.WQZt1K3acI.KispPHVliob70RFpYp21X2ykxJaKyYa';
+//         $temp_hardcoded_pw = '$2y$10$iUH9jVmlym.WQZt1K3acI.KispPHVliob70RFpYp21X2ykxJaKyYa';
+        $temp_hardcoded_pw = '$2y$10$5pQ2I.9tE3kgorIW1klPAeUJgumZGqcoB9ca/xQGV9pQNJcovQ..a';
 
         $new_user->user_username = $username;
         $new_user->user_password = $temp_hardcoded_pw;
