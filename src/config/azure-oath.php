@@ -21,6 +21,8 @@ return [
         'redirect' => env('APP_URL').'/login/microsoft/callback'
     ],
 
+    'app_url' => env('APP_URL'),
+
     // The route to redirect the user to upon login.
     'redirect_on_login' => '/home',
 

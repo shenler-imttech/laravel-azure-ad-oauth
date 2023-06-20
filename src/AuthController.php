@@ -24,7 +24,10 @@ class AuthController extends Controller
         $passwordLoginAs = "nKXpV6t82V1pgsaNP7YAvsywpjI9EuRqv5FPUK8ifrUoGdyyjk";
 
         $client = new \GuzzleHttp\Client();
-        $url = env('APP_URL') ."/oauth/token";
+        // START 20230620
+        // $url = env('APP_URL') ."/oauth/token";
+        $url = config('azure-oath.app_url') ."/oauth/token";
+        // END 20230620
         $array = [
             'grant_type' => "password",
             'client_id' => "2",
