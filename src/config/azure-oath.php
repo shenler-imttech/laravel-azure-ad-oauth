@@ -22,6 +22,7 @@ return [
     ],
 
     'app_url' => env('APP_URL'),
+    'web_url' => env('APP_WEB_URL'),
 
     // The route to redirect the user to upon login.
     'redirect_on_login' => '/home',

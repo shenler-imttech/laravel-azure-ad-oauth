@@ -41,7 +41,10 @@ class AuthController extends Controller
 
         $data = json_decode($response->getBody(), true);
 
-        $baseUrl = env('APP_WEB_URL') . '/session/admin/login';
+        // START 20230620
+        // $baseUrl = env('APP_WEB_URL') . '/session/admin/login';
+        $baseUrl = env('azure-oath.web_url') . '/session/admin/login';
+        // END 20230620
         $builtUrl = $baseUrl . '?token_type=' . $data['token_type'] . '&expires_in=' . $data['expires_in'] . '&access_token=' . $data['access_token'] . '&refresh_token=' . $data['refresh_token'];
 
         return redirect()->away($builtUrl);
