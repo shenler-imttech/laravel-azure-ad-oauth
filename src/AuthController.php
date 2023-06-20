@@ -43,10 +43,7 @@ class AuthController extends Controller
 
         // START 20230620
         // $baseUrl = env('APP_WEB_URL') . '/session/admin/login';
-        // $baseUrl = env('azure-oath.web_url') . '/session/admin/login';
-        $baseUrl = config('azure-oath.web_url') ."/session/admin/login";
-        \Log::info('$baseUrl');
-        \Log::info($baseUrl);
+        $baseUrl = config('azure-oath.web_url') . '/session/admin/login';
         // END 20230620
         $builtUrl = $baseUrl . '?token_type=' . $data['token_type'] . '&expires_in=' . $data['expires_in'] . '&access_token=' . $data['access_token'] . '&refresh_token=' . $data['refresh_token'];
 
