@@ -74,6 +74,8 @@ class AuthController extends Controller
 
         // else if check if user existing here
         // existingUserAddOn - update user information with azure id
+        \Log::info('$user->email');
+        \Log::info($user->email);
         $existingUser = $user_class::where('user_email', $user->email)->first();
 
         if ($existingUser) {
