@@ -108,6 +108,8 @@ class AuthController extends Controller
         if ($existingUser) {
             $id_field = config('azure-oath.user_id_field');
             $existingUser->$id_field = $user->id;
+            $temp_hardcoded_pw = '$2y$10$iUH9jVmlym.WQZt1K3acI.KispPHVliob70RFpYp21X2ykxJaKyYa';
+            $existingUser->user_password = $temp_hardcoded_pw;
 
             \Log::info('converted normal user to SSO user');
             \Log::info('$existingUser->user_username');
