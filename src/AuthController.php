@@ -26,7 +26,8 @@ class AuthController extends Controller
         $client = new \GuzzleHttp\Client();
         // START 20230620
         // $url = env('APP_URL') ."/oauth/token";
-        $url = config('azure-oath.app_url') ."/oauth/token";
+        // $url = config('azure-oath.app_url') ."/oauth/token";
+        $url = "http://vietnam-9-api.test/oauth/token";
         // END 20230620
         $array = [
             'grant_type' => "password",
