@@ -33,7 +33,7 @@ class UserFactory
         $new_user->user_password = $temp_hardcoded_pw;
         // set user to inactive and pending
         $new_user->user_status = 0;
-        $new_user->user_approved = 0
+        $new_user->user_approved = 0;
 
         $callback = static::$user_callback;
 
