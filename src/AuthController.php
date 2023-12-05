@@ -24,15 +24,27 @@ class AuthController extends Controller
         $user_approved = $authUser->user_approved;
         $user_deleted_at = $authUser->deleted_at;
 
-        if ($user_status == 0 && $user_approved == 0) {
+        if (!is_null($user_deleted_at)) {
+            \Log::info('user deleted');
+            \Log::info('return here');
+
+            $baseUrl = config('azure-oath.web_url') . '/session/admin/login';
+            $builtUrl = $baseUrl . '?error_message=' . 'Your user account has been deleted. Please contact an administrator for assistance.';
+            return redirect()->away($builtUrl);
+        } else if ($user_status == 0 && $user_approved == 0) {
             \Log::info('user inactive and pending');
             \Log::info('return here');
+
+            $baseUrl = config('azure-oath.web_url') . '/session/admin/login';
+            $builtUrl = $baseUrl . '?error_message=' . 'Your user account is pending activation. Please contact an administrator to complete the process.';
+            return redirect()->away($builtUrl);
         } else if ($user_status == 0 && $user_approved == 1) {
             \Log::info('user inactive');
             \Log::info('return here');
-        } else if (!is_null($user_deleted_at)) {
-            \Log::info('user deleted');
-            \Log::info('return here');
+
+            $baseUrl = config('azure-oath.web_url') . '/session/admin/login';
+            $builtUrl = $baseUrl . '?error_message=' . 'Your user account is inactive. Please contact an administrator for assistance.';
+            return redirect()->away($builtUrl);
         }
 
         $usernameLoginAs = $authUser['user_username'];
