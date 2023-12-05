@@ -93,7 +93,7 @@ class AuthController extends Controller
     protected function findOrCreateUser($user)
     {
         $user_class = config('azure-oath.user_class');
-        $authUser = $user_class::where(config('azure-oath.user_id_field'), $user->id)->first();
+        $authUser = $user_class::where(config('azure-oath.user_id_field'), $user->id)->withTrashed()->first();
 
         if ($authUser) {
             return $authUser;
@@ -103,7 +103,7 @@ class AuthController extends Controller
         // existingUserAddOn - update user information with azure id
         \Log::info('$user->email');
         \Log::info($user->email);
-        $existingUser = $user_class::where('user_email', $user->email)->first();
+        $existingUser = $user_class::where('user_email', $user->email)->withTrashed()->first();
 
         if ($existingUser) {
             $id_field = config('azure-oath.user_id_field');
