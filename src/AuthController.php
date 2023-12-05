@@ -87,6 +87,8 @@ class AuthController extends Controller
             \Log::info($existingUser->user_username);
 
             $existingUser->save();
+
+            return $existingUser;
         }
 
         $UserFactory = new UserFactory();
