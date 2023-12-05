@@ -20,6 +20,21 @@ class AuthController extends Controller
 
         // START 20221221
 
+        $user_status = $authUser->user_status;
+        $user_approved = $authUser->user_approved;
+        $user_deleted_at = $authUser->deleted_at;
+
+        if ($user_status == 0 && $user_approved == 0) {
+            \Log::info('user inactive and pending');
+            \Log::info('return here');
+        } else if ($user_status == 0 && $user_approved == 1) {
+            \Log::info('user inactive');
+            \Log::info('return here');
+        } else if (!is_null($user_deleted_at)) {
+            \Log::info('user deleted');
+            \Log::info('return here');
+        }
+
         $usernameLoginAs = $authUser['user_username'];
         $passwordLoginAs = "nKXpV6t82V1pgsaNP7YAvsywpjI9EuRqv5FPUK8ifrUoGdyyjk";
 
