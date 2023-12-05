@@ -71,6 +71,21 @@ class AuthController extends Controller
             return $authUser;
         }
 
+        // else if check if user existing here
+        // existingUserAddOn - update user information with azure id
+        $existingUser = $user_class::where('email', $user->user_email)->first();
+
+        if ($existingUser) {
+            $id_field = config('azure-oath.user_id_field');
+            $existingUser->$id_field = $user->id;
+
+            \Log::info('converted normal user to SSO user');
+            \Log::info('$existingUser->user_username');
+            \Log::info($existingUser->user_username);
+
+            $existingUser->save();
+        }
+
         $UserFactory = new UserFactory();
 
         return $UserFactory->convertAzureUser($user);
