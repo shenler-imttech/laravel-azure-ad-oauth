@@ -29,7 +29,7 @@ class AuthController extends Controller
             \Log::info('return here');
 
             $baseUrl = config('azure-oath.web_url') . '/session/admin/login';
-            $builtUrl = $baseUrl . '?error_message=' . 'Your user account has been deleted. Please contact an administrator for assistance.';
+            $builtUrl = $baseUrl . '?error_message=' . 'Your user account has been rejected. Please contact an administrator for assistance.';
             return redirect()->away($builtUrl);
         } else if ($user_status == 0 && $user_approved == 0) {
             \Log::info('user inactive and pending');
