@@ -18,8 +18,6 @@ class AuthController extends Controller
 
         $authUser = $this->findOrCreateUser($user);
 
-        // START 20221221
-
         $user_status = $authUser->user_status;
         $user_approved = $authUser->user_approved;
         $user_deleted_at = $authUser->deleted_at;
@@ -47,47 +45,34 @@ class AuthController extends Controller
             return redirect()->away($builtUrl);
         }
 
-        $usernameLoginAs = $authUser['user_username'];
-        $passwordLoginAs = "nKXpV6t82V1pgsaNP7YAvsywpjI9EuRqv5FPUK8ifrUoGdyyjk";
+        \Log::info('before $this->generateToken($authUser)');
 
-        $client = new \GuzzleHttp\Client();
-        // START 20230620
-        // $url = env('APP_URL') ."/oauth/token";
-        $url = config('azure-oath.app_url') ."/oauth/token";
-        // $url = "http://vietnam-9-api.test/oauth/token";
-        // END 20230620
-        $array = [
-            'grant_type' => "password",
-            'client_id' => "2",
-            'client_secret' => "OiyeoNx5slPvbtYjwqV0R3i91VtTPjXrI1aXTGcv",
-            'scope' => "*",
-            'password' => $passwordLoginAs,
-            'username' => $usernameLoginAs,
-            'provider' => "admins",
-        ];
-        $response = $client->request('POST', $url,  ['json'=>$array]);
+        $token = $this->generateToken($authUser);
 
-        $data = json_decode($response->getBody(), true);
+        \Log::info('after $this->generateToken($authUser)');
 
-        // START 20230620
-        // $baseUrl = env('APP_WEB_URL') . '/session/admin/login';
         $baseUrl = config('azure-oath.web_url') . '/session/admin/login';
-        // END 20230620
-        $builtUrl = $baseUrl . '?token_type=' . $data['token_type'] . '&expires_in=' . $data['expires_in'] . '&access_token=' . $data['access_token'] . '&refresh_token=' . $data['refresh_token'];
+
+        $builtUrl = $baseUrl . '#token_type=Bearer' . '&expires_in=86400' . '&access_token=' . $token . '&refresh_token=' . $token;
 
         return redirect()->away($builtUrl);
+    }
 
-        // END 20221221
+    private function generateToken($authUser = null) {
+        \Log::info('private function generateToken($authUser = null) {');
 
-        // auth()->login($authUser, true);
+        try {
+            if (!$authUser) {
+                throw new Exception("User not found!");
+            }
+            $token = $authUser->createToken('MicrosoftAzure', ["*"])->accessToken;
 
-        // // session([
-        // //     'azure_user' => $user
-        // // ]);
+            return $token;
+        } catch (\Throwable $th) {
+            \Log::error("AuthController handleOauthResponse generateToken : ", ['error_message' => $th->getMessage()]);
 
-        // return redirect(
-        //     config('azure-oath.redirect_on_login')
-        // );
+            return null;
+        }
     }
 
     protected function findOrCreateUser($user)
