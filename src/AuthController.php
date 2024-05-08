@@ -18,43 +18,28 @@ class AuthController extends Controller
 
         $authUser = $this->findOrCreateUser($user);
 
-        // START 20221221
+        $token = $this->generateToken($authUser);
 
-        $usernameLoginAs = $authUser['user_username'];
-//         $passwordLoginAs = "nKXpV6t82V1pgsaNP7YAvsywpjI9EuRqv5FPUK8ifrUoGdyyjk";
-        $passwordLoginAs = "12345678";
+        $baseUrl = config('azure-oath.web_url') . '/session/admin/login';
 
-        $client = new \GuzzleHttp\Client();
-        $url = env('APP_URL') ."/service/oauth/token";
-        $array = [
-            'grant_type' => "password",
-            'client_id' => "2",
-            'client_secret' => "OiyeoNx5slPvbtYjwqV0R3i91VtTPjXrI1aXTGcv",
-            'scope' => "*",
-            'password' => $passwordLoginAs,
-            'username' => $usernameLoginAs,
-            'provider' => "admins",
-        ];
-        $response = $client->request('POST', $url,  ['json'=>$array]);
-
-        $data = json_decode($response->getBody(), true);
-
-        $baseUrl = env('APP_WEB_URL') . '/session/admin/login';
-        $builtUrl = $baseUrl . '?token_type=' . $data['token_type'] . '&expires_in=' . $data['expires_in'] . '&access_token=' . $data['access_token'] . '&refresh_token=' . $data['refresh_token'];
+        $builtUrl = $baseUrl . '#token_type=Bearer' . '&expires_in=31536000' . '&access_token=' . $token . '&refresh_token=' . $token;
 
         return redirect()->away($builtUrl);
+    }
 
-        // END 20221221
+    private function generateToken($authUser = null) {
+        try {
+            if (!$authUser) {
+                throw new Exception("User not found!");
+            }
+            $token = $authUser->createToken('MicrosoftAzure', ["*"])->accessToken;
 
-        // auth()->login($authUser, true);
+            return $token;
+        } catch (\Throwable $th) {
+            \Log::error("AuthController handleOauthResponse generateToken: ", ['error_message' => $th->getMessage()]);
 
-        // // session([
-        // //     'azure_user' => $user
-        // // ]);
-
-        // return redirect(
-        //     config('azure-oath.redirect_on_login')
-        // );
+            return null;
+        }
     }
 
     protected function findOrCreateUser($user)
@@ -64,6 +49,23 @@ class AuthController extends Controller
 
         if ($authUser) {
             return $authUser;
+        }
+
+        \Log::info('$user->email: ' . $user->email);
+        $existingUser = $user_class::where('user_email', $user->email)->first();
+
+        if ($existingUser) {
+            $id_field = config('azure-oath.user_id_field');
+            $existingUser->$id_field = $user->id;
+            $temp_hardcoded_pw = ''; // set password to empty
+            $existingUser->user_password = $temp_hardcoded_pw;
+
+            \Log::info('converted normal user to SSO user');
+            \Log::info('$existingUser->user_username: ' . $existingUser->user_username);
+
+            $existingUser->save();
+
+            return $existingUser;
         }
 
         $UserFactory = new UserFactory();
