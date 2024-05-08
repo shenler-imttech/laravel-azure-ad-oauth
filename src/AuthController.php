@@ -20,6 +20,14 @@ class AuthController extends Controller
 
         $token = $this->generateToken($authUser);
 
+        if (is_null($token)) {
+            \Log::info('no token generated');
+
+            $baseUrl = config('azure-oath.web_url') . '/session/admin/login';
+            $builtUrl = $baseUrl . '?error_message=' . 'Login failed. Please contact an administrator for assistance.';
+            return redirect()->away($builtUrl);
+        }
+
         $baseUrl = config('azure-oath.web_url') . '/session/admin/login';
 
         $builtUrl = $baseUrl . '#token_type=Bearer' . '&expires_in=31536000' . '&access_token=' . $token . '&refresh_token=' . $token;
